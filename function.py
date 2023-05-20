@@ -28,7 +28,7 @@ def login(chromeBrowser: webdriver.Chrome, dp_id, username, password):
         By.XPATH, "/html/body/app-login/div/div/div/div/div/div/div[1]/div/form/div/div[4]/div/button").click()
     time.sleep(2)
     # WebDriverWait(chromeBrowser, 10).until(EC.url_changes(chromeBrowser.current_url))
-    print('wait finish')
+    # print('wait finish')
     # return chromeBrowser
 
 
@@ -40,20 +40,24 @@ def logout(chromeBrowser: webdriver.Chrome):
 def check_status(chromeBrowser: webdriver.Chrome):
     parent = chromeBrowser.find_element(By.CLASS_NAME, "user-profile-name")
     name = parent.find_element(By.TAG_NAME, 'span').text
-    while name is None:
-        chromeBrowser.refresh
+    while name is None or chromeBrowser.find_element(By.XPATH, '''//*[@id="sideBar"]/nav/ul/li[8]/a''').is_displayed() is False:
+        chromeBrowser.refresh()
     chromeBrowser.get('https://meroshare.cdsc.com.np/#/asba')
     time.sleep(1)
     chromeBrowser.find_element(By.XPATH, '''//*[@id="main"]/div/app-asba/div/div[1]/div/div/ul/li[3]/a''').click()
     time.sleep(1)
-    Rank = input('Enter the rank:')
+    Rank = 1
     chromeBrowser.find_element(By.XPATH, f'''//*[@id="main"]/div/app-asba/div/div[2]/app-share-list/div/div/div[2]/div[1]/div[{Rank}]/div/div[2]/div/div[3]/button''').click()
     time.sleep(2)
     status = chromeBrowser.find_element(By.XPATH, '''//*[@id="main"]/div/app-application-report/div/div[2]/div/div[3]/div/div[1]/div[7]/div/div/div[2]/div/label''').text
-    
+    company = chromeBrowser.find_element(By.XPATH, '''//*[@id="main"]/div/app-application-report/div/div[2]/div/div[1]/div/div/div/div/div/span[1]''').text
     # chromeBrowser.find_element()
-    print(name,status)
-
+    print(f'{name} ko heram hai aba')
+    if status == 'Alloted':
+        print(f'Oh lucky person, paryo paryo {company} paryo') 
+    elif status == 'Not Alloted':
+        print(f'Luck nai chaina k parcha, {company} parena')
+    
 
 # //*[@id="main"]/div/app-asba/div/div[2]/app-share-list/div/div/div[2]/div[1]/div[1]/div/div[2]/div/div[3]/button
 # //*[@id="main"]/div/app-asba/div/div[2]/app-share-list/div/div/div[2]/div[1]/div[2]/div/div[2]/div/div[3]/button

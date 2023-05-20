@@ -49,6 +49,7 @@ if __name__ == '__main__':
                 print("Login attempt failed. Retrying....")
         if current_attempt == max_attempts:
             print("Login failed")
+            continue
 
         check_status(chromeBrowser=chromeBrowser)
         logout(chromeBrowser=chromeBrowser)
