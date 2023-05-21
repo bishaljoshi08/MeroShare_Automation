@@ -2,6 +2,7 @@
 from selenium import webdriver
 import time
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 
 # importing the login credentials
 from config import credentials
@@ -19,9 +20,15 @@ if __name__ == '__main__':
     # Create a Service object
     service = Service(chromedriver_path)
 
-    # create object
-    chromeBrowser = webdriver.Chrome(service=service)
+    # Create Chrome options and set headless mode
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-logging")
+    chrome_options.add_argument("--log-level=3")
 
+
+    # create object
+    chromeBrowser = webdriver.Chrome(service=service, options=chrome_options)
     # open browser and navigate to meroshare
     chromeBrowser.get('https://meroshare.cdsc.com.np/#/login')
 
@@ -42,7 +49,7 @@ if __name__ == '__main__':
                 else:
                     current_attempt += 1
                     chromeBrowser.refresh()
-                    print("Login attempt failed. Retrying....")
+                    print("Login attempt failed1. Retrying....")
             except:
                 current_attempt += 1
                 chromeBrowser.refresh()
