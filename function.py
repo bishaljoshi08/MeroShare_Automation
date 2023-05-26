@@ -77,3 +77,37 @@ def check_status(name, chromeBrowser: webdriver.Chrome):
         print(f'Oh lucky person, paryo paryo {company} paryo')
     elif status == 'Not Alloted':
         print(f'Luck nai chaina k parcha, {company} parena')
+
+@decorator_login_success
+def apply_shares(name, chromeBrowser: webdriver.Chrome, crn, pin):
+    chromeBrowser.get('https://meroshare.cdsc.com.np/#/asba')
+    time.sleep(1)
+    chromeBrowser.find_element(
+        By.XPATH, '''//*[@id="main"]/div/app-asba/div/div[2]/app-applicable-issue/div/div/div/div/div/div/div[2]/div/div[4]/button''').click()
+    time.sleep(1)
+    chromeBrowser.find_element(
+        By.ID, '''selectBank''').click()
+    time.sleep(1)
+    option = 2
+    chromeBrowser.find_element(
+        By.XPATH, f'''//*[@id="selectBank"]/option[{option}]''').click()
+    time.sleep(1)
+    chromeBrowser.find_element(By.XPATH, '''//*[@id="appliedKitta"]''').send_keys(10)
+    chromeBrowser.find_element(By.XPATH, '''//*[@id="crnNumber"]''').send_keys(crn)
+    chromeBrowser.find_element(By.XPATH, '''//*[@id="disclaimer"]''').click()
+    chromeBrowser.find_element(By.XPATH, '''//*[@id="main"]/div/app-issue/div/wizard/div/wizard-step[1]/form/div[2]/div/div[5]/div[2]/div/button[1]''').click()
+    time.sleep(1)
+    chromeBrowser.find_element(By.XPATH, '''//*[@id="transactionPIN"]''').send_keys(pin)
+    chromeBrowser.find_element(By.XPATH, '''//*[@id="main"]/div/app-issue/div/wizard/div/wizard-step[2]/div[2]/div/form/div[2]/div/div/div/button[1]''').click()
+    time.sleep(2)
+    status = chromeBrowser.find_element(By.XPATH, '''//*[@id="toast-container"]''').text
+    print(f'{status} of {name}')
+
+    # company = chromeBrowser.find_element(
+    #     By.XPATH, '''//*[@id="main"]/div/app-application-report/div/div[2]/div/div[1]/div/div/div/div/div/span[1]''').text
+    # # chromeBrowser.find_element()
+    # print(f'{name} ko heram hai aba')
+    # if status == 'Alloted':
+    #     print(f'Oh lucky person, paryo paryo {company} paryo')
+    # elif status == 'Not Alloted':
+    #     print(f'Luck nai chaina k parcha, {company} parena')

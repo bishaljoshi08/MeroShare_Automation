@@ -8,7 +8,7 @@ from selenium.webdriver.chrome.options import Options
 from config import credentials
 
 # importing login
-from function import login, logout, check_status
+from function import login, logout, check_status, apply_shares
 
 
 # Driver Code
@@ -20,11 +20,11 @@ if __name__ == '__main__':
     # Create a Service object
     service = Service(chromedriver_path)
 
-    # Create Chrome options and set headless mode
+    # # Create Chrome options and set headless mode
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-logging")
-    chrome_options.add_argument("--log-level=3")
+    # chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--disable-logging")
+    # chrome_options.add_argument("--log-level=3")
 
 
     # create object
@@ -38,6 +38,8 @@ if __name__ == '__main__':
         dp_id = each_account['dp_id']
         username = each_account['username']
         password = each_account['password']
+        crn = each_account['crn']
+        pin = each_account['pin']
         current_attempt = 0
         while current_attempt < max_attempts:
             try:
@@ -58,7 +60,7 @@ if __name__ == '__main__':
             print("Login failed")
             continue
 
-        check_status(chromeBrowser=chromeBrowser)
+        apply_shares(chromeBrowser=chromeBrowser,crn=crn,pin=pin)
         logout(chromeBrowser=chromeBrowser)
 
         # chromeBrowser.find_element("class", "select2-search__field").send_keys(dp_id)
