@@ -59,7 +59,7 @@ if __name__ == '__main__':
         if current_attempt == max_attempts:
             print("Login failed")
             continue
-
+        # check_status(chromeBrowser=chromeBrowser)
         apply_shares(chromeBrowser=chromeBrowser,crn=crn,pin=pin)
         logout(chromeBrowser=chromeBrowser)
 

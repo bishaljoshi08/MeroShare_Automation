@@ -3,6 +3,8 @@ from selenium.webdriver.common.by import By
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
+from config import Mult_bank_name
 
 
 def decorator_login_possible(func):
@@ -82,15 +84,27 @@ def check_status(name, chromeBrowser: webdriver.Chrome):
 def apply_shares(name, chromeBrowser: webdriver.Chrome, crn, pin):
     chromeBrowser.get('https://meroshare.cdsc.com.np/#/asba')
     time.sleep(1)
+    # in which number the ipo is 
+    list_rank = 2
     chromeBrowser.find_element(
-        By.XPATH, '''//*[@id="main"]/div/app-asba/div/div[2]/app-applicable-issue/div/div/div/div/div/div/div[2]/div/div[4]/button''').click()
+        By.XPATH, f'''//*[@id="main"]/div/app-asba/div/div[2]/app-applicable-issue/div/div/div/div/div[{list_rank}]/div/div[2]/div/div[4]/button''').click()
+        # By.XPATH, '''//*[@id="main"]/div/app-asba/div/div[2]/app-applicable-issue/div/div/div/div/div/div/div[2]/div/div[4]/button''').click()
     time.sleep(1)
-    chromeBrowser.find_element(
-        By.ID, '''selectBank''').click()
+    input = chromeBrowser.find_element(
+        By.ID, '''selectBank''')
+    input.click()
+    input.send_keys(Keys.ARROW_DOWN)
+    input.send_keys(Keys.ARROW_DOWN)
+    if name == Mult_bank_name:
+        input.send_keys(Keys.ARROW_DOWN)
+    input.send_keys(Keys.ENTER)
     time.sleep(1)
-    option = 2
-    chromeBrowser.find_element(
-        By.XPATH, f'''//*[@id="selectBank"]/option[{option}]''').click()
+    
+    # else:
+    #     option = 1
+
+    # chromeBrowser.find_element(
+    #     By.XPATH, f'''//*[@id="selectBank"]/option[{option}]''').click()
     time.sleep(1)
     chromeBrowser.find_element(By.XPATH, '''//*[@id="appliedKitta"]''').send_keys(10)
     chromeBrowser.find_element(By.XPATH, '''//*[@id="crnNumber"]''').send_keys(crn)
