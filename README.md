@@ -27,11 +27,28 @@ credentials = [
 ]
 ```
 ## How to Run the program ?
-### Create Virtual Environment
+Note: Make sure you have python 3.6+ installed in your device.
+### Create and activate virtual environment
+For Windows:
+```
+python -m venv venv
+venv\Scripts\activate
+```
+For Linux/Mac:
+```
+python3 -m venv venv
+source ./venv/bin/activate
+```
 
 ### Install requirements.txt
+After activating the virtualenv, install the dependencies as follows:
+```
+pip install -r requirements.txt
+```
+For Linux/Mac, use `pip3` instead of `pip`.
 
 ### Run the program
 ```sh
 python main.py
 ```
+For Linux/Mac, use `python3` instead of `python`.
