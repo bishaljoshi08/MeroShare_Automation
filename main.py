@@ -3,6 +3,7 @@ from selenium import webdriver
 import time
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+import logging
 
 # importing the login credentials
 from config import credentials
@@ -32,6 +33,17 @@ if __name__ == '__main__':
     # open browser and navigate to meroshare
     chromeBrowser.get('https://meroshare.cdsc.com.np/#/login')
 
+    #configure logger
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.ERROR)
+
+    formatter = logging.Formatter('%(asctime)s : %(name)s : %(message)s')
+
+    file_handler = logging.FileHandler('login.log')
+    file_handler.setFormatter(formatter)
+
+    logger.addHandler(file_handler)
+
     max_attempts = 3
     for each_account in credentials:
         # storing the required parameters to login
@@ -51,16 +63,16 @@ if __name__ == '__main__':
                 else:
                     current_attempt += 1
                     chromeBrowser.refresh()
-                    print("Login attempt failed1. Retrying....")
+                    logger.error(f"Login attempt failed for {username}. Retrying....")
             except:
                 current_attempt += 1
                 chromeBrowser.refresh()
-                print("Login attempt failed. Retrying....")
+                logger.error(f"Login attempt failed for {username}. Retrying....")
         if current_attempt == max_attempts:
-            print("Login failed")
+            logger.warning(f"Login failed for {username}. Moving on to next one.")
             continue
-        # check_status(chromeBrowser=chromeBrowser)
-        apply_shares(chromeBrowser=chromeBrowser,crn=crn,pin=pin)
+        check_status(chromeBrowser=chromeBrowser)
+        # apply_shares(chromeBrowser=chromeBrowser,crn=crn,pin=pin)
         logout(chromeBrowser=chromeBrowser)
 
         # chromeBrowser.find_element("class", "select2-search__field").send_keys(dp_id)

@@ -1,4 +1,5 @@
 import time
+import logging
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -6,6 +7,17 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from config import Mult_bank_name
 
+
+#configure logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('%(message)s')
+
+file_handler = logging.FileHandler('login.log')
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
 
 def decorator_login_possible(func):
     def inner(*args, **kwargs):
@@ -74,11 +86,12 @@ def check_status(name, chromeBrowser: webdriver.Chrome):
     company = chromeBrowser.find_element(
         By.XPATH, '''//*[@id="main"]/div/app-application-report/div/div[2]/div/div[1]/div/div/div/div/div/span[1]''').text
     # chromeBrowser.find_element()
-    print(f'{name} ko heram hai aba')
     if status == 'Alloted':
-        print(f'Oh lucky person, paryo paryo {company} paryo')
+        logger.debug(f'Congratulations {name}, You got the shares of {company}')
     elif status == 'Not Alloted':
-        print(f'Luck nai chaina k parcha, {company} parena')
+        logger.debug(f'Try again {name}, You are not alloted the shares of {company}')
+    else:
+        logger.debug(f'Either result is not published or your application was not successful.')
 
 @decorator_login_success
 def apply_shares(name, chromeBrowser: webdriver.Chrome, crn, pin):
@@ -115,7 +128,16 @@ def apply_shares(name, chromeBrowser: webdriver.Chrome, crn, pin):
     chromeBrowser.find_element(By.XPATH, '''//*[@id="main"]/div/app-issue/div/wizard/div/wizard-step[2]/div[2]/div/form/div[2]/div/div/div/button[1]''').click()
     time.sleep(2)
     status = chromeBrowser.find_element(By.XPATH, '''//*[@id="toast-container"]''').text
-    print(f'{status} of {name}')
+    logger.debug(f'{status} of {name}')
+    '''
+     * Description
+     *
+     * Parameters:
+     *  - parameter_name - Description
+     *
+     * Returns:
+     * Return description
+    '''
 
     # company = chromeBrowser.find_element(
     #     By.XPATH, '''//*[@id="main"]/div/app-application-report/div/div[2]/div/div[1]/div/div/div/div/div/span[1]''').text
