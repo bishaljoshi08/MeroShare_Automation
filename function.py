@@ -5,7 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
-from config import Mult_bank_name
+from config import mult_bank_name, mult2_bank_name
 
 
 #configure logger
@@ -14,7 +14,7 @@ logger.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter('%(message)s')
 
-file_handler = logging.FileHandler('login.log')
+file_handler = logging.FileHandler('info.log')
 file_handler.setFormatter(formatter)
 
 logger.addHandler(file_handler)
@@ -35,7 +35,7 @@ def decorator_login_success(func):
         name = parent.find_element(By.TAG_NAME, 'span').text
         while name is None or chromeBrowser.find_element(By.XPATH, '''//*[@id="sideBar"]/nav/ul/li[8]/a''').is_displayed() is False:
             chromeBrowser.refresh()
-        func(name, *args, **kwargs)
+        return func(name, *args, **kwargs)
     return inner
 
 
@@ -94,11 +94,20 @@ def check_status(name, chromeBrowser: webdriver.Chrome):
         logger.debug(f'Either result is not published or your application was not successful.')
 
 @decorator_login_success
-def apply_shares(name, chromeBrowser: webdriver.Chrome, crn, pin):
+def check_IPO(name,chromeBrowser: webdriver.Chrome):
     chromeBrowser.get('https://meroshare.cdsc.com.np/#/asba')
     time.sleep(1)
-    # in which number the ipo is 
-    list_rank = 2
+    parent_div = chromeBrowser.find_element(By.XPATH, '''//*[@id="main"]/div/app-asba/div/div[2]/app-applicable-issue/div/div/div/div''')
+    child_div = parent_div.find_elements(By.XPATH, "./div")
+    for i,each in enumerate(child_div):
+        print("Enter the value {} for {}".format(i+1,each.text.partition('\n')[0]))
+    list_rank = input("Enter your value: ")
+    return list_rank
+
+@decorator_login_success
+def apply_shares(name, chromeBrowser: webdriver.Chrome, crn, pin,list_rank):
+    chromeBrowser.get('https://meroshare.cdsc.com.np/#/asba')
+    time.sleep(1)
     chromeBrowser.find_element(
         By.XPATH, f'''//*[@id="main"]/div/app-asba/div/div[2]/app-applicable-issue/div/div/div/div/div[{list_rank}]/div/div[2]/div/div[4]/button''').click()
         # By.XPATH, '''//*[@id="main"]/div/app-asba/div/div[2]/app-applicable-issue/div/div/div/div/div/div/div[2]/div/div[4]/button''').click()
@@ -108,7 +117,10 @@ def apply_shares(name, chromeBrowser: webdriver.Chrome, crn, pin):
     input.click()
     input.send_keys(Keys.ARROW_DOWN)
     input.send_keys(Keys.ARROW_DOWN)
-    if name == Mult_bank_name:
+    if name in mult_bank_name:
+        input.send_keys(Keys.ARROW_DOWN)
+    if name in mult2_bank_name:
+        input.send_keys(Keys.ARROW_DOWN)
         input.send_keys(Keys.ARROW_DOWN)
     input.send_keys(Keys.ENTER)
     time.sleep(1)
