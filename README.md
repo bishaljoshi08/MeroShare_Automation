@@ -73,3 +73,23 @@ python main.py
 ```
 
 For Linux/Mac, use `python3` instead of `python`.
+
+### For Developers
+
+Use the guidelines as specified below:
+
+- Use [precommit](https://pre-commit.com/) to format your code before commit
+
+  - Install precommit as follows
+
+    ```bash
+    pip install pre-commit
+    ```
+
+  - Now, install precommit git hooks scripts
+
+    ```bash
+    pre-commit install
+    ```
+
+  - Whenever you commit, pre-commit should be activated and certain changes will be made. Stage your changes and commit them as you normally would.
