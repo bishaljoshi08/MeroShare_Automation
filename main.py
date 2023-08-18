@@ -9,7 +9,7 @@ import logging
 from config import credentials
 
 # importing login
-from function import login, logout, check_status, apply_shares, check_IPO
+from function import login, logout, check_status, apply_shares, check_IPO, limit_login
 
 
 # Driver Code
@@ -43,62 +43,25 @@ if __name__ == '__main__':
     file_handler.setFormatter(formatter)
 
     logger.addHandler(file_handler)
+    apply = False
+    
 
-    max_attempts = 3
-    current_attempt = 0
-    dp_id = credentials[0]['dp_id']
-    username = credentials[0]['username']
-    password = credentials[0]['password']
-    while current_attempt< max_attempts:
-        try:
-            # chromeBrowser =
-            login(chromeBrowser=chromeBrowser, dp_id=dp_id,
-                    username=username, password=password)
-            if chromeBrowser.current_url == 'https://meroshare.cdsc.com.np/#/dashboard':
-                break
-            else:
-                current_attempt += 1
-                chromeBrowser.refresh()
-                logger.error(f"Login attempt failed for accessing the available IPO. Retrying....")
-        except:
-            current_attempt += 1
-            chromeBrowser.refresh()
-            logger.error(f"Login attempt failed for accessing the available IPO. Retrying....")
-    if current_attempt == max_attempts:
-        logger.warning(f"Login failed for accessing the available IPO.")
-    list_rank = check_IPO(chromeBrowser=chromeBrowser)
-    print(list_rank)
-    logout(chromeBrowser=chromeBrowser)
+    for i, each_account in enumerate(credentials):
+        
 
-    for each_account in credentials:
         # storing the required parameters to login
-        dp_id = each_account['dp_id']
-        username = each_account['username']
-        password = each_account['password']
-        crn = each_account['crn']
-        pin = each_account['pin']
-        current_attempt = 0
-        while current_attempt < max_attempts:
-            try:
-                # chromeBrowser =
-                login(chromeBrowser=chromeBrowser, dp_id=dp_id,
-                      username=username, password=password)
-                if chromeBrowser.current_url == 'https://meroshare.cdsc.com.np/#/dashboard':
-                    break
-                else:
-                    current_attempt += 1
-                    chromeBrowser.refresh()
-                    logger.error(f"Login attempt failed for {username}. Retrying....")
-            except:
-                current_attempt += 1
-                chromeBrowser.refresh()
-                logger.error(f"Login attempt failed for {username}. Retrying....")
-        if current_attempt == max_attempts:
-            logger.warning(f"Login failed for {username}. Moving on to next one.")
-            continue
-        # check_status(chromeBrowser=chromeBrowser)
-        print(list_rank)
-        apply_shares(chromeBrowser=chromeBrowser,crn=crn,pin=pin,list_rank=list_rank)
+        limit_login(each_account=each_account, chromeBrowser=chromeBrowser)
+        if apply:
+            if i == 0 :
+                list_rank = check_IPO(chromeBrowser=chromeBrowser)
+
+            
+
+            print(list_rank)
+            apply_shares(chromeBrowser=chromeBrowser,each_account=each_account,list_rank=list_rank)
+        else:
+            check_status(chromeBrowser=chromeBrowser)
+
         logout(chromeBrowser=chromeBrowser)
 
         # chromeBrowser.find_element("class", "select2-search__field").send_keys(dp_id)
