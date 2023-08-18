@@ -1,4 +1,5 @@
 # Automation
+
 ## _Apply Shares and Check Status_
 
 ![N|Solid](https://meroshare.cdsc.com.np/assets/img/brand-login.png)
@@ -34,29 +35,61 @@ credentials = [
 mult_bank_name = ['RAM PRASAD POUDEL', 'BIDHYA DEVI BHANDARI']
 mult2_bank_name = ['PUSHPA KAMAL DAHAL', 'RAVI LAMICHHANE']
 ```
+
 ## How to Run the program ?
+
 Note: Make sure you have python 3.6+ installed in your device.
+
 ### Create and activate virtual environment
+
 For Windows:
+
 ```
 python -m venv venv
 venv\Scripts\activate
 ```
+
 For Linux/Mac:
+
 ```
 python3 -m venv venv
 source ./venv/bin/activate
 ```
 
 ### Install requirements.txt
+
 After activating the virtualenv, install the dependencies as follows:
+
 ```
 pip install -r requirements.txt
 ```
+
 For Linux/Mac, use `pip3` instead of `pip`.
 
 ### Run the program
+
 ```sh
 python main.py
 ```
+
 For Linux/Mac, use `python3` instead of `python`.
+
+### For Developers
+
+Use the guidelines as specified below:
+
+- Use [precommit](https://pre-commit.com/) to format your code before commit
+
+  - Install precommit as follows
+
+    ```bash
+    pip install pre-commit
+    ```
+
+  - Now, install precommit git hooks scripts
+
+    ```bash
+    pre-commit install
+    ```
+
+  - Whenever you commit, pre-commit should be activated and certain changes will be made. Stage your changes and commit them as you normally would.
