@@ -33,7 +33,7 @@ def decorator_login_success(func):
         chromeBrowser = kwargs['chromeBrowser']
         parent = chromeBrowser.find_element(By.CLASS_NAME, "user-profile-name")
         name = parent.find_element(By.TAG_NAME, 'span').text
-        while name is None and not chromeBrowser.find_element(By.XPATH, '''//*[@id="sideBar"]/nav/ul/li[8]/a''').is_displayed() is False:
+        while name is None or chromeBrowser.find_element(By.XPATH, '''//*[@id="sideBar"]/nav/ul/li[8]/a''').is_displayed() is False:
             chromeBrowser.refresh()
         return func(name, *args, **kwargs)
     return inner
